@@ -9,11 +9,51 @@
 #include <unistd.h>
 #include <errno.h>
 #include <arpa/inet.h> 
+#include <pthread.h>
+
+char sendbuff[50];
+char recvbuff[50];
+int sockfd=0;
+
+
+//sending message "thread" code
+void *send_mssg(void *arg)
+{
+while(1)
+{
+fgets(sendbuff,sizeof(sendbuff)-1,stdin);
+int n=send(sockfd,sendbuff,sizeof(sendbuff),0);
+if(n==0)
+{
+pthread_exit(NULL);
+}
+//printf("%s",sendbuff);
+}
+}
+
+
+//receving message "thread" code
+void *recv_mssg(void *arg)
+{
+while(1)
+{
+//memset(recvbuff,0,sizeof(recvbuff));
+int n=recv(sockfd,recvbuff,sizeof(recvbuff),0);
+if(n==0)
+{
+//close(sockfd);
+pthread_exit(NULL);
+}
+printf(">>%s",recvbuff);
+}
+}
+
+
+
 
 int main(int argc, char *argv[])
 {
-int sockfd = 0;
-//char sendBuff[10];
+
 struct sockaddr_in serv_addr;
 int i;
 
@@ -45,18 +85,18 @@ if( connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
    printf("\n Error : Connect Failed \n");
    return 1;
 }
-for(i=0;i<6;i++){
-int a=0;
-int n=recv(sockfd,&a,sizeof(a),0);
 
-printf("%d \n",a);
+int send_mssg_id,recv_mssg_id; 
 
-a++;
 
-printf("%d \n",a);
+pthread_t send_mssg_thrd,recv_mssg_thrd;
 
-int c =send(sockfd,&a,sizeof(a),0);
 
-}
+send_mssg_id=pthread_create(&send_mssg_thrd,NULL,send_mssg,NULL);
+
+recv_mssg_id=pthread_create(&recv_mssg_thrd,NULL,recv_mssg,NULL);
+
+
+pthread_exit(NULL);
 
 } //main
