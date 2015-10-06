@@ -77,11 +77,12 @@ int send_mssg_id,recv_mssg_id;
 
 pthread_t send_mssg_thrd,recv_mssg_thrd;
 
-
+// creating threads
 send_mssg_id=pthread_create(&send_mssg_thrd,NULL,send_mssg,NULL);
 
 recv_mssg_id=pthread_create(&recv_mssg_thrd,NULL,recv_mssg,NULL);
 
+//dont let main exit before before threads do 
 pthread_exit(NULL);
 
 
