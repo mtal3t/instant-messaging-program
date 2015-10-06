@@ -20,7 +20,7 @@ void *send_mssg(void *arg)
 {
 while(1)
 {
-fgets(sendbuff,sizeof(sendbuff)-1,stdin);
+fgets(sendbuff,sizeof(sendbuff),stdin);
 
 int n=send(connfd,sendbuff,sizeof(sendbuff),0);
 if(n==0)
