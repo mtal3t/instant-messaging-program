@@ -13,7 +13,7 @@ int main(int argc, char *argv[]){
 
 int listenfd = 0, connfd = 0;
 
-struct sockaddr_in serv_addr; 
+struct sockaddr_in serv_addr;
 memset(&serv_addr, '0', sizeof(serv_addr));
 int a=5;
 //char sendBuff[10];
@@ -38,7 +38,7 @@ for(i=0;i<6;i++){
 //sendBuff[10]="mohammed";
 int n=send(connfd,&a,sizeof(a),0);
 int c=recv(connfd,&a,sizeof(a),0);
-printf("%d\n",a);
+//printf("%d\n",a);
 
 }
 
