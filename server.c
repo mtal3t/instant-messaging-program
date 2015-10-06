@@ -27,7 +27,6 @@ if(n==0)
 {
 pthread_exit(NULL);
 }
-//printf("%s",sendbuff);
 }
 }
 
@@ -44,7 +43,7 @@ if(n==0)
 //close(connfd);
 pthread_exit(NULL);
 }
-printf(">>%s",recvbuff);
+printf(">> %s",recvbuff);
 }
 }
 
