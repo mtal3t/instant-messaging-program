@@ -8,16 +8,50 @@
 #include <string.h>
 #include <sys/types.h>
 #include <time.h> 
+#include <pthread.h>
+int listenfd = 0, connfd = 0;
+char sendbuff[50];
+char recvbuff[50];
+
+
+void *send_mssg(void *arg)
+{
+while(1)
+{
+fgets(sendbuff,sizeof(sendbuff)-1,stdin);
+int n=send(connfd,sendbuff,sizeof(sendbuff),0);
+
+//printf("%s",sendbuff);
+}
+}
+
+
+
+void *recv_mssg(void *arg)
+{
+while(1)
+{
+int n=recv(connfd,recvbuff,sizeof(recvbuff),0);
+if(n==0)
+{
+pthread_exit(NULL);
+}
+printf("%s",recvbuff);
+
+}
+}
+
+
+
 
 int main(int argc, char *argv[]){
 
-int listenfd = 0, connfd = 0;
+
 
 struct sockaddr_in serv_addr;
 memset(&serv_addr, '0', sizeof(serv_addr));
-int a=5;
-//char sendBuff[10];
-//memset(sendBuff, '0', sizeof(sendBuff));
+//int a=5;
+
 
 listenfd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -33,17 +67,17 @@ bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 listen(listenfd, 10); 
 
 connfd = accept(listenfd, (struct sockaddr*)NULL, NULL);
-int i=0;
-for(i=0;i<6;i++){
-//sendBuff[10]="mohammed";
-int n=send(connfd,&a,sizeof(a),0);
-int c=recv(connfd,&a,sizeof(a),0);
-//printf("%d\n",a);
+//fflush(stdin);
+int thrd1_id,thrd2_id;
 
-}
+pthread_t thrd1,thrd2;
 
 
+thrd1_id=pthread_create(&thrd1,NULL,send_mssg,NULL);
+
+thrd2_id=pthread_create(&thrd2,NULL,recv_mssg,NULL);
 
 
 
+pthread_exit(NULL);
 }//main
