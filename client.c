@@ -11,54 +11,51 @@
 #include <arpa/inet.h> 
 #include <pthread.h>
 
-
-int  sockfd = 0;
 char sendbuff[50];
 char recvbuff[50];
+int sockfd=0;
 
 
+//sending message "thread" code
 void *send_mssg(void *arg)
 {
 while(1)
 {
 fgets(sendbuff,sizeof(sendbuff)-1,stdin);
-//fflush(stdin);
-//scanf("%s",sendbuff);
 int n=send(sockfd,sendbuff,sizeof(sendbuff),0);
-
-//printf("%s",sendbuff);
-
-}
-}
-
-
-
-void *recv_mssg(void *arg)
-{
-while(1)
-{
-
-int n=recv(sockfd,recvbuff,sizeof(recvbuff),0);
 if(n==0)
 {
 pthread_exit(NULL);
 }
-printf("%s",recvbuff);
-
+//printf("%s",sendbuff);
 }
 }
 
 
+//receving message "thread" code
+void *recv_mssg(void *arg)
+{
+while(1)
+{
+//memset(recvbuff,0,sizeof(recvbuff));
+int n=recv(sockfd,recvbuff,sizeof(recvbuff),0);
+if(n==0)
+{
+//close(sockfd);
+pthread_exit(NULL);
+}
+printf(">>%s",recvbuff);
+}
+}
 
 
 
 
 int main(int argc, char *argv[])
 {
-//int sockfd = 0;
 
 struct sockaddr_in serv_addr;
-//int i;
+int i;
 
 if(argc != 2)
 {
@@ -89,21 +86,17 @@ if( connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
    return 1;
 }
 
-
-int thrd1_id,thrd2_id;
-
-pthread_t thrd1,thrd2;
+int send_mssg_id,recv_mssg_id; 
 
 
-thrd1_id=pthread_create(&thrd1,NULL,send_mssg,NULL);
+pthread_t send_mssg_thrd,recv_mssg_thrd;
 
-thrd2_id=pthread_create(&thrd2,NULL,recv_mssg,NULL);
 
+send_mssg_id=pthread_create(&send_mssg_thrd,NULL,send_mssg,NULL);
+
+recv_mssg_id=pthread_create(&recv_mssg_thrd,NULL,recv_mssg,NULL);
 
 
 pthread_exit(NULL);
-
-
-
 
 } //main
